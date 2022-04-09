@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 import ChannelsList from './src/channels/list';
+import MessagesList from './src/messages/list';
 
 const ServersList = () => {
   return (
@@ -9,21 +10,12 @@ const ServersList = () => {
   );
 }
 
-const MessagesList = () => {
-  return (
-    <View style={styles.messagesList}>
-      <Text>Here is my message</Text>
-      <Text>Another message...</Text>
-    </View>
-  )
-}
-
 export default function App() {
   return (
     <View style={styles.container}>
       <ServersList />
       <ChannelsList />
-      <MessagesList />
+      <MessagesList serverName='Channel 1' />
     </View>
   );
 }
@@ -45,11 +37,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#333333",
     height: "100%",
     width: "14%"
-  },
-  messagesList: {
-    backgroundColor: "#444444",
-    height: "100%",
-    width: "82%"
   },
   text: {
     color: "#ffffff"
