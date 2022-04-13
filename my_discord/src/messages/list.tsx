@@ -4,7 +4,7 @@ import { Text, View, FlatList, StyleSheet, TextInput, TextStyle } from "react-na
 interface messageInfo {
   content: string;
   author: string;
-  date?: Date;
+  date?: string;
   color?: string;
 }
 
@@ -40,7 +40,7 @@ const MessagesList = (props: channelInfo) => {
         style={styles.newMessage} placeholder="Type here to send a message"
         onSubmitEditing={async evt => {
           console.log(`Send : ${evt.nativeEvent.text}`);
-          props.client.send(`${"Me"}:${props.channelName}:${evt.nativeEvent.text}`);
+          props.client.send(`${props.channelName}:${"Me"}:${"#fff"}:${new Date().getTime()}:${evt.nativeEvent.text}`);
           setMsgtyping("");
         }}
         onChangeText={t => setMsgtyping(t)}

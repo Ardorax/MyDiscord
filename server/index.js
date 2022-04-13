@@ -17,7 +17,7 @@ server.on('connection', function (socket) {
     socket.on('message', function (msg) {
         let str = msg.toString();
         let msgPart = str.split(":");
-        serverMessages[msgPart[1]].push({author: msgPart[0], content: msgPart.splice(2).join(":")});
+        serverMessages[msgPart[0]].push({ author: msgPart[1], color: msgPart[2], date: msgPart[3], content: msgPart.splice(4).join(":") });
         console.log(str);
         sockets.forEach(s => s.send(str));
     });
@@ -29,18 +29,21 @@ server.on('connection', function (socket) {
 });
 
 let serverMessages = {
-    general: [
-        { author: "John", content: "Hello" },
-        { author: "Jane", content: "Hi" },
+    announcement: [
+        { author: "<Server>",
+        content: "This channel is for important things !",
+        color: "#ff0000" },
     ],
-    friends: [
-        { author: "John", content: "How are you?" },
+    general: [
+        { author: "<Server>",
+        content: "This is the main channel",
+        color: "#ff0000" },
     ]
 }
 
 app.get("/messages", (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
-    console.log("A user join the server");
+    console.log("An user join the server");
     res.status(200).json(serverMessages)
 })
 
