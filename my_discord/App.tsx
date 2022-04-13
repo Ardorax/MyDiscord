@@ -18,7 +18,8 @@ export default function App() {
   const [messages, setMessages] = useState(default_msg);
   const [chanName, setChanName] = useState(Object.keys(messages)[0]);
   const count = useRef(0);
-  const client: WebSocket = new WebSocket("ws://localhost:8080");
+  const adressPart = window.location.href.split(":");
+  const client: WebSocket = new WebSocket("ws:" + adressPart[1] + ":8080");
 
   let addMessage = ((new_message: any, channelName: string, messages:any) => {
     console.log(messages);
@@ -28,8 +29,11 @@ export default function App() {
   });
 
   useEffect(() => {
+    //Get adress to call the server on another ports.
+    console.log(adressPart[0] + ":" + adressPart[1] + ":3000");
+
     if (count.current == 0) {
-      let prop = fetch("http://localhost:3000/messages", {
+      let prop = fetch(adressPart[0] + ":" + adressPart[1] + ":3000/messages", {
         method: "GET",
         headers: {}
       }).then(res => {

@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
     height: "5vh",
     margin: "2vh",
     borderRadius: 7,
+    color: "#fff",
   },
   messageDisplayList: {
     height: "86vh",

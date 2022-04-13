@@ -15,7 +15,9 @@ server.on('connection', function (socket) {
 
     // When you receive a message, send that message to every socket.
     socket.on('message', function (msg) {
-        str = msg.toString();
+        let str = msg.toString();
+        let msgPart = str.split(":");
+        serverMessages[msgPart[1]].push({author: msgPart[0], content: msgPart.splice(2).join(":")});
         console.log(str);
         sockets.forEach(s => s.send(str));
     });
@@ -24,14 +26,6 @@ server.on('connection', function (socket) {
     socket.on('close', function () {
         sockets = sockets.filter(s => s !== socket);
     });
-
-    setTimeout(() => {
-        socket.send('Martin:general:Hello from the server!');
-    }, 1000);
-
-    setTimeout(() => {
-        socket.send('Martin2:general:Hello from the server!');
-    }, 2000);
 });
 
 let serverMessages = {
