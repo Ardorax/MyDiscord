@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import ChannelsList from './src/channels/list';
 import MessagesList from './src/messages/list';
@@ -11,11 +12,53 @@ const ServersList = () => {
 }
 
 export default function App() {
+  let default_msg = {
+    loading: [{ author: "Search", content: "Messages are loading" }]
+  }
+  const [messages, setMessages] = useState(default_msg);
+  const [chanName, setChanName] = useState(Object.keys(messages)[0]);
+  const count = useRef(0);
+  const client: WebSocket = new WebSocket("ws://localhost:8080");
+
+  let addMessage = ((new_message: any, channelName: string, messages:any) => {
+    console.log(messages);
+    let array_copy = { ...messages};
+    array_copy[channelName].push(new_message);
+    setMessages(array_copy);
+  });
+
+  useEffect(() => {
+    if (count.current == 0) {
+      let prop = fetch("http://localhost:3000/messages", {
+        method: "GET",
+        headers: {}
+      }).then(res => {
+        res.json().then(load_messages => {
+          console.log(load_messages);
+          console.log("test")
+          console.log(messages);
+          setMessages(load_messages);
+          console.log(messages);
+          setChanName(Object.keys(load_messages)[0]);
+
+          //Open the connexion
+          client.onmessage = (event) => {
+            //When user send a message this function is trigger. It's a filter.
+            console.log(event);
+            if (typeof(event.data) != 'string') return;
+            let msgPart = event.data.split(":");
+            addMessage({author: msgPart[0], content: msgPart[2]}, msgPart[1], load_messages);
+          }
+        });
+      });
+    }
+    count.current = 1;
+  });
   return (
     <View style={styles.container}>
       <ServersList />
-      <ChannelsList />
-      <MessagesList serverName='Channel 1' />
+      <ChannelsList setChanName={setChanName} chanList={Object.keys(messages)} />
+      <MessagesList channelName={chanName} messages={messages} client={client} />
     </View>
   );
 }
@@ -27,6 +70,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+
   },
   serverList: {
     backgroundColor: "#111111",

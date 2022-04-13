@@ -1,9 +1,15 @@
-import { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, Pressable } from 'react-native';
 import UserPanel from "./userPanel";
 
 interface Props {
   name?: string;
+  setChanName: Function;
+}
+
+interface ChanListProps {
+  setChanName: Function;
+  chanList: string[];
 }
 
 class ChannelsName extends Component<Props> {
@@ -11,7 +17,7 @@ class ChannelsName extends Component<Props> {
     super(props);
   }
   action(this: this) {
-    console.log(this.props.name);
+    this.props.setChanName(this.props.name);
   }
   render() {
     return (
@@ -22,16 +28,12 @@ class ChannelsName extends Component<Props> {
   }
 }
 
-const ChannelsList = () => {
+const ChannelsList = (props: ChanListProps) => {
   return (
     <View style={styles.channelsList}>
       <Text style={styles.serverName}>Super Serveur</Text>
       <ScrollView>
-        <ChannelsName name="Channel 1"/>
-        <ChannelsName name="Channel 2"/>
-        <ChannelsName name="Channel 3"/>
-        <ChannelsName name="Channel 4"/>
-        <ChannelsName name="Channel 5"/>
+        {props.chanList.map(chan => <ChannelsName name={chan} key={chan} setChanName={props.setChanName}/>)}
       </ScrollView>
       <UserPanel userName='Michel' />
     </View>
@@ -40,7 +42,7 @@ const ChannelsList = () => {
 
 const styles = StyleSheet.create({
   channelsList: {
-    backgroundColor: "#333333",
+    backgroundColor: "#333",
     height: "100%",
     width: "14%"
   },
@@ -51,7 +53,8 @@ const styles = StyleSheet.create({
     borderBottomColor: "#111",
     borderBottomWidth: 2,
     display: "flex",
-    alignItems: "center"
+    alignItems: "center",
+    backgroundColor: "#222",
   },
   channelsName: {
     height: "30px",

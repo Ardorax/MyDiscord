@@ -1,51 +1,84 @@
-import { Text, View, FlatList, StyleSheet } from "react-native"
+import { useState } from "react";
+import { Text, View, FlatList, StyleSheet, TextInput, TextStyle } from "react-native"
 
 interface messageInfo {
   content: string;
   author: string;
   date?: Date;
+  color?: string;
 }
 
-interface serverName {
-  serverName: string;
+interface channelInfo {
+  channelName: string;
+  messages: any;// I need to understand object and array
+ client: WebSocket;
 }
 
 const Message = (props: messageInfo) => {
+  let authorStyle: TextStyle = {
+    fontSize: 20,
+    textDecorationLine: "underline",
+    color: props.color || "#fff",
+  }
   return (
     <View style={styles.message}>
-      <Text style={styles.author}>{props.author}</Text>
-      <Text>{props.content}</Text>
+      <Text style={authorStyle}>{props.author}</Text>
+      <Text style={styles.messageContent}>{props.content}</Text>
     </View>
   )
 }
 
-const MessagesList = (props: serverName) => {
+const MessagesList = (props: channelInfo) => {
+  const [messageTyping, setMsgtyping] = useState("");
   return (
     <View style={styles.messagesList}>
-      <Text>{props.serverName}</Text>
-      <FlatList data={[
-        { author: "Michel", content: "Salut a tous." },
-        { author: "Patrick", content: "Alors, on attend pas Patrick !" },
-      ]}
-        renderItem={({ item }) => Message(item)}>
+      <Text style={styles.channelName}># {props.channelName}</Text>
+      <FlatList data={props.messages[props.channelName]}
+        renderItem={({ item }) => Message(item)} style={styles.messageDisplayList}>
       </FlatList>
-    </View>
+      <TextInput
+        style={styles.newMessage} placeholder="Type here to send a message"
+        onSubmitEditing={async evt => {
+          console.log(`Send : ${evt.nativeEvent.text}`);
+          props.client.send(`${"Me"}:${props.channelName}:${evt.nativeEvent.text}`);
+          setMsgtyping("");
+        }}
+        onChangeText={t => setMsgtyping(t)}
+        value={messageTyping}
+      ></TextInput>
+    </View >
   )
 }
 
 const styles = StyleSheet.create({
   messagesList: {
     backgroundColor: "#444444",
-    height: "100%",
-    width: "82%"
+    width: "82%",
   },
   message: {
     padding: "10px",
     marginLeft: "40px",
   },
-  author: {
+  messageContent: {
+    color: "#eee",
+  },
+  channelName: {
     fontSize: 20,
-    textDecorationLine: "underline"
+    height: "5vh",
+    backgroundColor: "#333",
+    color: "#fff",
+    display: "flex",
+    alignItems: "center",
+    paddingLeft: "20px"
+  },
+  newMessage: {
+    backgroundColor: "#4d5b60",
+    height: "5vh",
+    margin: "2vh",
+    borderRadius: 7,
+  },
+  messageDisplayList: {
+    height: "86vh",
   }
 });
 
