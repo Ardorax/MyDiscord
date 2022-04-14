@@ -11,7 +11,7 @@ interface messageInfo {
 interface channelInfo {
   channelName: string;
   messages: any;// I need to understand object and array
- client: WebSocket;
+  client: WebSocket;
 }
 
 const Message = (props: messageInfo) => {
@@ -53,7 +53,7 @@ const MessagesList = (props: channelInfo) => {
 const styles = StyleSheet.create({
   messagesList: {
     backgroundColor: "#444444",
-    width: "82%",
+    width: "85%",
   },
   message: {
     padding: "10px",
