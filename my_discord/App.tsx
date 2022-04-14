@@ -34,7 +34,7 @@ export default function App() {
 
   // Execute at the creation
   useEffect(() => {
-    let prop = fetch(adressPart[0] + ":" + adressPart[1] + ":3000/messages", {
+    fetch(adressPart[0] + ":" + adressPart[1] + ":3000/messages", {
       method: "GET",
       headers: {}
     }).then(res => {
