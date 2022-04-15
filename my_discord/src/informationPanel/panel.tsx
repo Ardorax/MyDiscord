@@ -8,10 +8,11 @@ interface selectorInfo {
   setChanName: Function;
   chanList: string[];
   serverList: { name: string, connected: boolean }[];
+  server : number;
 }
 
 const InformationPanel = (props: selectorInfo) => {
-  const [mode, setmode] = useState(0);
+  const [mode, setmode] = useState(1);
   return (
     <View style={styles.informationPanel}>
       <Title title={["Les channels", "Les serveurs"][mode]} mode={mode} setMode={setmode} />

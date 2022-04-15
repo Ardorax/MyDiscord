@@ -16,6 +16,25 @@ export default function App() {
     loading: [{ author: "Search", content: "Messages are loading", color: "#ff0000", date: new Date().getTime() }]
   }
 
+  let appStorage = useRef(
+    {
+      // The object with all the servers
+      default: {
+        // The server
+        connected: true, id: 0, channels: {
+          // An object with all the channels
+          loading: [
+            // The list of messages
+            {
+              // A message
+              author: "Search", content: "Messages are loading", color: "#ff0000", date: new Date().getTime()
+            }
+          ]
+        }
+      }
+    }
+  )
+
   //Current message store by user and his channel
   const [messages, setMessages] = useState(default_msg);
   const [chanName, setChanName] = useState(Object.keys(messages)[0]);
@@ -49,6 +68,8 @@ export default function App() {
           let msgPart = event.data.split(":");
           addMessage({ author: msgPart[1], color: msgPart[2], date: msgPart[3], content: msgPart.splice(4).join(":") },
             msgPart[0], load_messages, setMessages);
+          console.log(appStorage.current);
+          appStorage.current["new_serv"] = {connected: false, id: 1, channels:{}};
         }
       });
     }).catch(err => {
@@ -67,7 +88,7 @@ export default function App() {
   // The components
   return (
     <View style={styles.container}>
-      <InformationPanel setChanName={setChanName} chanList={Object.keys(messages)} serverList={serverList} />
+      <InformationPanel setChanName={setChanName} chanList={Object.keys(messages)} serverList={serverList} server={server} />
       <MessagesList channelName={chanName} messages={messages} client={client.current} />
     </View>
   );
