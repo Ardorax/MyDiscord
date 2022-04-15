@@ -22,20 +22,19 @@ export default function App() {
 
   // Create websocket
   const adressPart = window.location.href.split(":");
-  const client = useRef(new WebSocket("ws:" + adressPart[1] + ":8080"));
+  const client = useRef(new WebSocket("ws:" + adressPart[1] + ":27842"));
 
   //Temporary server list
   const serverList = [
-    { name: "localhost", connected: true },
-    { name: "web adress", connected: false},
-    { name: "La table", connected: false},
-    { name: "test serv", connected: false},
-    { name: "Youtuber", connected: false},
+    { name: "localhost", connected: true, id: 0 },
   ]
+
+  // Current server
+  const [server, setServer] = useState(serverList[0].id);
 
   // Execute at the creation
   useEffect(() => {
-    fetch(adressPart[0] + ":" + adressPart[1] + ":3000/messages", {
+    fetch(adressPart[0] + ":" + adressPart[1] + ":27841/messages", {
       method: "GET",
       headers: {}
     }).then(res => {
