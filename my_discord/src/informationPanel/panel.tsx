@@ -7,16 +7,17 @@ import User from "./user";
 interface selectorInfo {
   setChanName: Function;
   chanList: string[];
-  serverList: {name:string, connected:boolean}[];
+  serverList: { name: string, connected: boolean }[];
 }
 
 const InformationPanel = (props: selectorInfo) => {
   const [mode, setmode] = useState(0);
   return (
     <View style={styles.informationPanel}>
-      <Title title={["Les channels", "Les serveurs"][mode]} mode={mode} setMode={setmode}/>
-      <Selector List={[props.chanList, props.serverList.map(item => item.name)][mode]} setChanName={props.setChanName} mode={mode}/>
-      <User userName="NewMichel"/>
+      <Title title={["Les channels", "Les serveurs"][mode]} mode={mode} setMode={setmode} />
+      <Selector List={mode ? props.serverList : props.chanList.map(elm => { return ({ name: elm }); })}
+        setChanName={props.setChanName} mode={mode} />
+      <User userName="NewMichel" />
     </View>
   );
 }
