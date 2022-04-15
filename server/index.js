@@ -1,12 +1,12 @@
 const express = require("express");
 const app = express()
-const port = 3000
+const port = 27841
 
 const bodyParser = require("body-parser");
 
 const WebSocket = require('ws');
 const server = new WebSocket.Server({
-    port: 8080
+    port: 27842,
 });
 
 let sockets = [];
