@@ -2,16 +2,14 @@ import { View, Text, StyleSheet, Pressable } from "react-native"
 
 interface TitleInfo {
   title: string;
-  mode: number;
-  setMode: Function;
+  listingServers: boolean;
+  setListing: Function;
 }
 
 const Title = (props: TitleInfo) => {
   const switch_mode = () => {
-    if (props.mode == 0)
-      props.setMode(1);
-    else
-      props.setMode(0);
+    if (props.listingServers == false)
+      props.setListing(true);
   }
   return (
     <Pressable style={styles.titleBox} onPress={switch_mode}>

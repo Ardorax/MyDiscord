@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { Text, View, FlatList, StyleSheet, TextInput, TextStyle } from "react-native"
+import { Text, View, FlatList, StyleSheet, TextInput, TextStyle } from "react-native";
+import Title from "./title";
+import Input from "./input";
 
 interface messageInfo {
   content: string;
@@ -9,9 +11,16 @@ interface messageInfo {
 }
 
 interface channelInfo {
+  appStorage: {
+    [key: string]: {
+      connected: boolean, adress: string, websocket?: WebSocket, channels: {
+        [key: string]: { author: string, content: string, color?: string, date?: string }[]
+      }
+    }
+  };
+  server: string;
   channelName: string;
-  messages: any;// I need to understand object and array
-  client: WebSocket;
+  //client: WebSocket;
 }
 
 const Message = (props: messageInfo) => {
@@ -29,23 +38,18 @@ const Message = (props: messageInfo) => {
 }
 
 const MessagesList = (props: channelInfo) => {
-  const [messageTyping, setMsgtyping] = useState("");
+  if (props.channelName == undefined || props.server == undefined) {
+    return (
+      <Text style={styles.errorDisplay}>Connect to a server</Text>
+    )
+  }
   return (
     <View style={styles.messagesList}>
-      <Text style={styles.channelName}># {props.channelName}</Text>
-      <FlatList data={props.messages[props.channelName]}
+      <Title title={props.channelName} />
+      <FlatList data={props.appStorage[props.server].channels[props.channelName]}
         renderItem={({ item }) => Message(item)} style={styles.messageDisplayList}>
       </FlatList>
-      <TextInput
-        style={styles.newMessage} placeholder="Type here to send a message"
-        onSubmitEditing={async evt => {
-          console.log(`Send : ${evt.nativeEvent.text}`);
-          props.client.send(`${props.channelName}:${"Me"}:${"#fff"}:${new Date().getTime()}:${evt.nativeEvent.text}`);
-          setMsgtyping("");
-        }}
-        onChangeText={t => setMsgtyping(t)}
-        value={messageTyping}
-      ></TextInput>
+      <Input />
     </View >
   )
 }
@@ -54,6 +58,7 @@ const styles = StyleSheet.create({
   messagesList: {
     backgroundColor: "#444444",
     width: "85%",
+    height: "100%",
   },
   message: {
     padding: "10px",
@@ -62,25 +67,19 @@ const styles = StyleSheet.create({
   messageContent: {
     color: "#eee",
   },
-  channelName: {
-    fontSize: 20,
-    height: "5vh",
-    backgroundColor: "#333",
-    color: "#fff",
-    display: "flex",
-    alignItems: "center",
-    paddingLeft: "20px"
-  },
-  newMessage: {
-    backgroundColor: "#4d5b60",
-    height: "5vh",
-    margin: "2vh",
-    borderRadius: 7,
-    color: "#fff",
-  },
   messageDisplayList: {
     height: "86vh",
-  }
+  },
+  errorDisplay: {
+    backgroundColor: "#444444",
+    width: "85%",
+    height: "100%",
+    fontSize: 30,
+    color: "#f00",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });
 
 export default MessagesList;

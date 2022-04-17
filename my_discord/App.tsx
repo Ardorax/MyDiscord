@@ -11,49 +11,47 @@ const addMessage: any = ((new_message: any, channelName: string, messages: any, 
 });
 
 export default function App() {
-  //Default messages on screen
-  let default_msg: Object = {
-    loading: [{ author: "Search", content: "Messages are loading", color: "#ff0000", date: new Date().getTime() }]
-  }
 
-  let appStorage = useRef(
+  let appStorage: {
+    current: {
+      [key: string]: {
+        connected: boolean, adress: string, websocket?: WebSocket, channels: {
+          [key: string]: { author: string, content: string, color?: string, date?: string }[]
+        }
+      }
+    }
+  } = useRef(
     {
       // The object with all the servers
-      default: {
+      localhost: {
         // The server
-        connected: true, id: 0, channels: {
-          // An object with all the channels
+        connected: false, adress: "http://localhost", channels: {
+          /*// An object with all the channels
           loading: [
             // The list of messages
             {
               // A message
               author: "Search", content: "Messages are loading", color: "#ff0000", date: new Date().getTime()
             }
-          ]
+          ]*/
         }
       }
     }
   )
 
-  //Current message store by user and his channel
-  const [messages, setMessages] = useState(default_msg);
-  const [chanName, setChanName] = useState(Object.keys(messages)[0]);
-
   // Create websocket
-  const adressPart = window.location.href.split(":");
-  const client = useRef(new WebSocket("ws:" + adressPart[1] + ":27842"));
-
-  //Temporary server list
-  const serverList = [
-    { name: "localhost", connected: true, id: 0 },
-  ]
+  //const adressPart = window.location.href.split(":");
+  //const client = useRef(new WebSocket("ws:" + adressPart[1] + ":27842"));
 
   // Current server
-  const [server, setServer] = useState(serverList[0].id);
+  const [server, setServer] = useState(undefined);
+
+  //Current channel of the user
+  const [channelName, setChannel] = useState(undefined);
 
   // Execute at the creation
   useEffect(() => {
-    fetch(adressPart[0] + ":" + adressPart[1] + ":27841/messages", {
+    /*fetch(adressPart[0] + ":" + adressPart[1] + ":27841/messages-", {
       method: "GET",
       headers: {}
     }).then(res => {
@@ -69,7 +67,7 @@ export default function App() {
           addMessage({ author: msgPart[1], color: msgPart[2], date: msgPart[3], content: msgPart.splice(4).join(":") },
             msgPart[0], load_messages, setMessages);
           console.log(appStorage.current);
-          appStorage.current["new_serv"] = {connected: false, id: 1, channels:{}};
+          appStorage.current["new_serv"] = { connected: false, id: 1, channels: {} };
         }
       });
     }).catch(err => {
@@ -82,14 +80,16 @@ export default function App() {
         }]
       });
       setChanName("error");
-    });
+    });*/
   }, []);
 
   // The components
   return (
     <View style={styles.container}>
-      <InformationPanel setChanName={setChanName} chanList={Object.keys(messages)} serverList={serverList} server={server} />
-      <MessagesList channelName={chanName} messages={messages} client={client.current} />
+      <InformationPanel server={server} setServer={setServer} setChanName={setChannel}
+      channelName={channelName} appStorage={appStorage.current}/>
+      <MessagesList appStorage={appStorage.current} channelName={channelName}
+      server={server}/>
     </View>
   );
 }

@@ -3,8 +3,7 @@ import { Pressable, Text, StyleSheet, TextStyle } from "react-native";
 
 interface Props {
   setChanName: Function;
-  mode:number;
-  element: {name: string, connected?:boolean};
+  name: string;
 }
 
 class SelectorOption extends Component<Props> {
@@ -18,20 +17,16 @@ class SelectorOption extends Component<Props> {
     display: "flex",
     alignItems: "center",
     margin: 5,
-    //If channel : blue
-    //if connected server : green
-    //If disconnected server : red
-    backgroundColor: this.props.mode ? (this.props.element.connected ? "#454" : "#544") : "#445",
+    backgroundColor: "#445",
     borderRadius: 20,
   }
   action(this: this) {
-    if (this.props.mode == 0)
-      this.props.setChanName(this.props.element.name);
+    this.props.setChanName(this.props.name);
   }
   render() {
     return (
       <Pressable onPressIn={this.action.bind(this)}>
-        <Text style={this.style}>{["#", ">"][this.props.mode]} {this.props.element.name}</Text>
+        <Text style={this.style}># {this.props.name}</Text>
       </Pressable>
     );
   }

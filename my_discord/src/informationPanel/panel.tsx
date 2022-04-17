@@ -1,23 +1,35 @@
 import { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { AppState, StyleSheet, View } from "react-native";
 import Title from "./title"
-import Selector from "./selector/selector";
+import ServerSelector from "./serverSelector/selector";
+import ChannelSelector from "./channelSelector/selector";
 import User from "./user";
 
 interface selectorInfo {
+  appStorage: {
+    [key: string]: {
+      connected: boolean, adress: string, websocket?: WebSocket, channels: {
+        [key: string]: { author: string, content: string, color?: string, date?: string }[]
+      }
+    }
+  };
+  server: string;
+  setServer: Function;
+  channelName: string;
   setChanName: Function;
-  chanList: string[];
-  serverList: { name: string, connected: boolean }[];
-  server : number;
 }
 
 const InformationPanel = (props: selectorInfo) => {
-  const [mode, setmode] = useState(1);
+  const [listingServers, setListing] = useState(true);
   return (
     <View style={styles.informationPanel}>
-      <Title title={["Les channels", "Les serveurs"][mode]} mode={mode} setMode={setmode} />
-      <Selector List={mode ? props.serverList : props.chanList.map(elm => { return ({ name: elm }); })}
-        setChanName={props.setChanName} mode={mode} />
+      <Title title={listingServers ? "Les serveurs" : "Les channels"}
+        listingServers={listingServers} setListing={setListing} />
+      {listingServers ?
+        <ServerSelector setServer={props.setServer} appStorage={props.appStorage}
+          setListing={setListing} setchannelName={props.setChanName} server={props.server} /> :
+        <ChannelSelector setChanName={props.setChanName} appStorage={props.appStorage}
+        server={props.server} />}
       <User userName="NewMichel" />
     </View>
   );
