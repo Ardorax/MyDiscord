@@ -17,17 +17,19 @@ interface selectorInfo {
   setServer: Function;
   channelName: string;
   setChanName: Function;
+  setupdate: Function;
 }
 
 const InformationPanel = (props: selectorInfo) => {
   const [listingServers, setListing] = useState(true);
   return (
     <View style={styles.informationPanel}>
-      <Title title={listingServers ? "Les serveurs" : "Les channels"}
+      <Title title={listingServers ? "Les serveurs" : props.server}
         listingServers={listingServers} setListing={setListing} />
       {listingServers ?
         <ServerSelector setServer={props.setServer} appStorage={props.appStorage}
-          setListing={setListing} setchannelName={props.setChanName} server={props.server} /> :
+          setListing={setListing} setchannelName={props.setChanName} server={props.server}
+          channel={props.channelName} setupdate={props.setupdate}/> :
         <ChannelSelector setChanName={props.setChanName} appStorage={props.appStorage}
         server={props.server} />}
       <User userName="NewMichel" />

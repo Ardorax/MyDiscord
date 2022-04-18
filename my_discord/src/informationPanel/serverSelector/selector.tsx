@@ -11,8 +11,10 @@ interface ListsInfo {
   };
   server: string;
   setServer: Function;
+  channel : string;
   setchannelName: Function;
   setListing: Function;
+  setupdate: Function;
 }
 
 const ServerSelector = (props: ListsInfo) => {
@@ -23,7 +25,7 @@ const ServerSelector = (props: ListsInfo) => {
           <SelectorOption key={element} element={element}
           setServer={props.setServer} appStorage={props.appStorage}
           setChannelName={props.setchannelName} setListing={props.setListing}
-          server={props.server}/>
+          server={props.server} channel={props.channel} setUpdate={props.setupdate}/>
         )
       }
     </ScrollView>

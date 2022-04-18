@@ -2,13 +2,7 @@ import { useState } from "react";
 import { Text, View, FlatList, StyleSheet, TextInput, TextStyle } from "react-native";
 import Title from "./title";
 import Input from "./input";
-
-interface messageInfo {
-  content: string;
-  author: string;
-  date?: string;
-  color?: string;
-}
+import Message from "./message";
 
 interface channelInfo {
   appStorage: {
@@ -19,37 +13,23 @@ interface channelInfo {
     }
   };
   server: string;
-  channelName: string;
-  //client: WebSocket;
-}
-
-const Message = (props: messageInfo) => {
-  let authorStyle: TextStyle = {
-    fontSize: 20,
-    textDecorationLine: "underline",
-    color: props.color || "#fff",
-  }
-  return (
-    <View style={styles.message}>
-      <Text style={authorStyle}>{props.author}</Text>
-      <Text style={styles.messageContent}>{props.content}</Text>
-    </View>
-  )
+  channel: string;
+  test: number;
 }
 
 const MessagesList = (props: channelInfo) => {
-  if (props.channelName == undefined || props.server == undefined) {
+  if (props.channel == undefined || props.server == undefined) {
     return (
       <Text style={styles.errorDisplay}>Connect to a server</Text>
     )
   }
   return (
     <View style={styles.messagesList}>
-      <Title title={props.channelName} />
-      <FlatList data={props.appStorage[props.server].channels[props.channelName]}
+      <Title title={props.channel} />
+      <FlatList data={props.appStorage[props.server].channels[props.channel]}
         renderItem={({ item }) => Message(item)} style={styles.messageDisplayList}>
       </FlatList>
-      <Input />
+      <Input appStorage={props.appStorage} server={props.server} channelName={props.channel}/>
     </View >
   )
 }
@@ -59,13 +39,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#444444",
     width: "85%",
     height: "100%",
-  },
-  message: {
-    padding: "10px",
-    marginLeft: "40px",
-  },
-  messageContent: {
-    color: "#eee",
   },
   messageDisplayList: {
     height: "86vh",

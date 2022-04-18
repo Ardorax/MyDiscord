@@ -25,71 +25,27 @@ export default function App() {
       // The object with all the servers
       localhost: {
         // The server
-        connected: false, adress: "http://localhost", channels: {
-          /*// An object with all the channels
-          loading: [
-            // The list of messages
-            {
-              // A message
-              author: "Search", content: "Messages are loading", color: "#ff0000", date: new Date().getTime()
-            }
-          ]*/
-        }
+        connected: false, adress: "localhost", channels: {}
       }
     }
   )
 
-  // Create websocket
-  //const adressPart = window.location.href.split(":");
-  //const client = useRef(new WebSocket("ws:" + adressPart[1] + ":27842"));
-
-  // Current server
+  // Current server.
   const [server, setServer] = useState(undefined);
 
-  //Current channel of the user
+  //Current channel of the user.
   const [channelName, setChannel] = useState(undefined);
 
-  // Execute at the creation
-  useEffect(() => {
-    /*fetch(adressPart[0] + ":" + adressPart[1] + ":27841/messages-", {
-      method: "GET",
-      headers: {}
-    }).then(res => {
-      res.json().then(load_messages => {
-
-        //Display messages
-        setMessages(load_messages);
-        setChanName(Object.keys(load_messages)[0]);
-
-        //Open the connexion
-        client.current.onmessage = (event) => {
-          let msgPart = event.data.split(":");
-          addMessage({ author: msgPart[1], color: msgPart[2], date: msgPart[3], content: msgPart.splice(4).join(":") },
-            msgPart[0], load_messages, setMessages);
-          console.log(appStorage.current);
-          appStorage.current["new_serv"] = { connected: false, id: 1, channels: {} };
-        }
-      });
-    }).catch(err => {
-      console.log("error");
-      setMessages({
-        error: [{
-          author: "Server Not Found",
-          content: "You're sure that there is a server here ?",
-          color: "#f00"
-        }]
-      });
-      setChanName("error");
-    });*/
-  }, []);
+  // Only use to force update message list when a new message is send.
+  const [update, setupdate] = useState(new Date().getTime());
 
   // The components
   return (
     <View style={styles.container}>
       <InformationPanel server={server} setServer={setServer} setChanName={setChannel}
-      channelName={channelName} appStorage={appStorage.current}/>
-      <MessagesList appStorage={appStorage.current} channelName={channelName}
-      server={server}/>
+      channelName={channelName} appStorage={appStorage.current} setupdate={setupdate}/>
+      <MessagesList appStorage={appStorage.current} channel={channelName}
+      server={server} test={update}/>
     </View>
   );
 }

@@ -17,9 +17,16 @@ server.on('connection', function (socket) {
     socket.on('message', function (msg) {
         let str = msg.toString();
         let msgPart = str.split(":");
-        serverMessages[msgPart[0]].push({ author: msgPart[1], color: msgPart[2], date: msgPart[3], content: msgPart.splice(4).join(":") });
-        console.log(str);
-        sockets.forEach(s => s.send(str));
+        let date = String(new Date().getTime());
+        let content = msgPart.splice(2).join(":");
+
+        if (msgPart[0] != "announcement") {
+            str = msgPart[0] + ":" + msgPart[1] + ":#fff:" + date + ":" + content
+            serverMessages[msgPart[0]].push({ author: msgPart[1], color: "#fff", date: date, content: content });
+            sockets.forEach(s => s.send(str));
+        } else {
+            socket.send("announcement:Server:#f00:000:You can't send messages here !");
+        }
     });
 
     // When a socket closes, or disconnects, remove it from the array.
@@ -30,15 +37,20 @@ server.on('connection', function (socket) {
 
 let serverMessages = {
     announcement: [
-        { author: "<Server>",
-        content: "This channel is for important things !",
-        color: "#ff0000" },
+        {
+            author: "<Server>",
+            content: "This channel is for important things !",
+            color: "#ff0000"
+        },
     ],
     general: [
-        { author: "<Server>",
-        content: "This is the main channel",
-        color: "#ff0000" },
-    ]
+        {
+            author: "<Server>",
+            content: "This is the main channel",
+            color: "#ff0000"
+        },
+    ],
+    random: [{}]
 }
 
 app.get("/messages", (req, res) => {
