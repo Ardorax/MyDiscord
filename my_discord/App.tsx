@@ -10,6 +10,20 @@ const addMessage: any = ((new_message: any, channelName: string, messages: any, 
   setMessages(array_copy);
 });
 
+let default_servers: any = {
+  // The object with all the servers
+  localhost: {
+    // The server
+    connected: false, adress: "localhost", channels: {}
+  }
+}
+
+if (!window.location.href.startsWith("http://localhost")) {
+  let adress = window.location.href.split("/")[2].split(":")[0];
+  console.log(adress);
+  default_servers["webhost"] = { adress: adress, connected: false, channels: {} }
+}
+
 export default function App() {
 
   let appStorage: {
@@ -20,15 +34,7 @@ export default function App() {
         }
       }
     }
-  } = useRef(
-    {
-      // The object with all the servers
-      localhost: {
-        // The server
-        connected: false, adress: "localhost", channels: {}
-      }
-    }
-  )
+  } = useRef(default_servers);
 
   // Current server.
   const [server, setServer] = useState(undefined);
@@ -43,9 +49,9 @@ export default function App() {
   return (
     <View style={styles.container}>
       <InformationPanel server={server} setServer={setServer} setChanName={setChannel}
-      channelName={channelName} appStorage={appStorage.current} setupdate={setupdate}/>
+        channelName={channelName} appStorage={appStorage.current} setupdate={setupdate} />
       <MessagesList appStorage={appStorage.current} channel={channelName}
-      server={server} test={update}/>
+        server={server} test={update} />
     </View>
   );
 }
