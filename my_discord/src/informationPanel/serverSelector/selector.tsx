@@ -11,7 +11,7 @@ interface ListsInfo {
   };
   server: string;
   setServer: Function;
-  channel : string;
+  channel: string;
   setchannelName: Function;
   setListing: Function;
   setupdate: Function;

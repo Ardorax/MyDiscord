@@ -4,6 +4,7 @@ import Title from "./title"
 import ServerSelector from "./serverSelector/selector";
 import ChannelSelector from "./channelSelector/selector";
 import User from "./user";
+import NewButton from "./new"
 
 interface selectorInfo {
   appStorage: {
@@ -24,8 +25,9 @@ const InformationPanel = (props: selectorInfo) => {
   const [listingServers, setListing] = useState(true);
   return (
     <View style={styles.informationPanel}>
-      <Title title={listingServers ? "Les serveurs" : props.server}
+      <Title title={listingServers ? "Vos serveurs" : props.server}
         listingServers={listingServers} setListing={setListing} />
+      <NewButton text="+"/>
       {listingServers ?
         <ServerSelector setServer={props.setServer} appStorage={props.appStorage}
           setListing={setListing} setchannelName={props.setChanName} server={props.server}
@@ -41,7 +43,7 @@ const styles = StyleSheet.create({
   informationPanel: {
     width: "15%",
     height: "100%"
-  }
+  },
 })
 
 export default InformationPanel;
