@@ -7,7 +7,7 @@ import Message from "./message";
 interface channelInfo {
   appStorage: {
     [key: string]: {
-      connected: boolean, adress: string, websocket?: WebSocket, channels: {
+      connected: boolean, adress: string, name: string, websocket?: WebSocket, channels: {
         [key: string]: { author: string, content: string, color?: string, date?: string }[]
       }
     }
@@ -29,7 +29,7 @@ const MessagesList = (props: channelInfo) => {
       <FlatList data={props.appStorage[props.server].channels[props.channel]}
         renderItem={({ item }) => Message(item)} style={styles.messageDisplayList}>
       </FlatList>
-      <Input appStorage={props.appStorage} server={props.server} channelName={props.channel}/>
+      <Input appStorage={props.appStorage} server={props.server} channelName={props.channel} />
     </View >
   )
 }

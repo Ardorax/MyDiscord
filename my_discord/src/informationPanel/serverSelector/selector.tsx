@@ -4,7 +4,7 @@ import SelectorOption from './option'
 interface ListsInfo {
   appStorage: {
     [key: string]: {
-      connected: boolean, adress: string, websocket?: WebSocket, channels: {
+      connected: boolean, adress: string, name: string, websocket?: WebSocket, channels: {
         [key: string]: { author: string, content: string, color?: string, date?: string }[]
       }
     }

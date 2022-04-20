@@ -4,7 +4,7 @@ import { TextInput, StyleSheet } from "react-native";
 interface input {
   appStorage: {
     [key: string]: {
-      connected: boolean, adress: string, websocket?: WebSocket, channels: {
+      connected: boolean, adress: string, name: string, websocket?: WebSocket, channels: {
         [key: string]: { author: string, content: string, color?: string, date?: string }[]
       }
     }
@@ -20,7 +20,7 @@ const Input = (props: input) => {
       style={styles.newMessage} placeholder="Type here to send a message"
       onSubmitEditing={async evt => {
         console.log(`Send : ${evt.nativeEvent.text}`);
-        (props.appStorage[props.server].websocket as WebSocket).send(`${props.channelName}:${"Me"}:${evt.nativeEvent.text}`);
+        (props.appStorage[props.server].websocket as WebSocket).send(`${props.channelName}:${props.appStorage[props.server].name}:${evt.nativeEvent.text}`);
         setMsgtyping("");
       }}
       onChangeText={t => setMsgtyping(t)}

@@ -10,7 +10,7 @@ const addMessage: any = ((new_message: any, channelName: string, messages: any, 
   setMessages(array_copy);
 });
 
-let default_servers: any = {
+/*let default_servers: any = {
   // The object with all the servers
   localhost: {
     // The server
@@ -22,14 +22,15 @@ if (!window.location.href.startsWith("http://localhost")) {
   let adress = window.location.href.split("/")[2].split(":")[0];
   console.log(adress);
   default_servers["webhost"] = { adress: adress, connected: false, channels: {} }
-}
+}*/
+let default_servers = {};
 
 export default function App() {
 
   let appStorage: {
     current: {
       [key: string]: {
-        connected: boolean, adress: string, websocket?: WebSocket, channels: {
+        connected: boolean, adress: string, name: string, websocket?: WebSocket, channels: {
           [key: string]: { author: string, content: string, color?: string, date?: string }[]
         }
       }

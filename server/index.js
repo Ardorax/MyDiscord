@@ -25,7 +25,7 @@ server.on('connection', function (socket) {
             serverMessages[msgPart[0]].push({ author: msgPart[1], color: "#fff", date: date, content: content });
             sockets.forEach(s => s.send(str));
         } else {
-            socket.send("announcement:Server:#f00:000:You can't send messages here !");
+            socket.send("announcement:<Server>:#f00:000:You can't send messages here !");
         }
     });
 
